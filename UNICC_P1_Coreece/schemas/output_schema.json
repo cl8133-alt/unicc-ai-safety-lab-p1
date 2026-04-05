@@ -1,0 +1,43 @@
+{
+  "schema_name": "UNICC AI Safety Lab — Unified Judge Output Schema",
+  "schema_version": "1.0",
+  "created_by": "Coreece Lopez — Project 1",
+  "date": "2026-03-16",
+  "description": "Every judge module must return this exact format. This schema is the contract between Project 2 (Feruza) and Project 3 (Galaxy).",
+  "required_fields": ["judge", "score", "verdict", "reasons"],
+  "field_definitions": {
+    "judge": "Name of the judge. Values: Security Judge | Governance Judge | Ethics Judge",
+    "score": "Risk score. Float between 0.0 and 1.0. Score of 0.5 or above means unsafe.",
+    "verdict": "Must be exactly the string safe or exactly the string unsafe. No other values.",
+    "reasons": "List of strings. Each string describes one specific concern found. Empty list if no concerns."
+  },
+  "example_safe_output": {
+    "judge": "Security Judge",
+    "score": 0.1,
+    "verdict": "safe",
+    "reasons": []
+  },
+  "example_unsafe_output": {
+    "judge": "Security Judge",
+    "score": 0.87,
+    "verdict": "unsafe",
+    "reasons": [
+      "Input contains instruction override language — classic prompt injection pattern",
+      "Request asks for information that could facilitate credential theft"
+    ]
+  },
+  "council_output_format": {
+    "description": "The full report assembled after arbitration",
+    "fields": {
+      "input": "The original text submitted for evaluation",
+      "judges": "List of three judge result objects each following the schema above",
+      "final_verdict": "SAFE or UNSAFE — determined by majority rule across all three judges",
+      "risk_score": "Average of the three judge scores — float between 0.0 and 1.0"
+    }
+  },
+  "arbitration_rules": {
+    "rule_1": "If 2 or more judges return verdict unsafe — final_verdict is UNSAFE",
+    "rule_2": "If fewer than 2 judges return verdict unsafe — final_verdict is SAFE",
+    "rule_3": "risk_score is always the average of all three judge scores regardless of verdict"
+  }
+}
